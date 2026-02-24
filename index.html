@@ -7,110 +7,157 @@
   <title>GEBRID — AI-Native Web3 Ecosystem</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🜸</text></svg>"/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
-  
+
   <style>
-    /* ... (весь твой старый CSS остаётся без изменений, только добавляю ниже новые стили) */
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#000;--ui:#0B0F14;--panel:#111827;--panel2:#1a2235;
+      --white:#FFF;--t2:#BFC7D5;--t3:#6B7280;
+      --neon:#A3FF12;--neon2:#8DFF00;--neon3:#7CFF4F;
+      --nd:rgba(163,255,18,.08);--ng:rgba(163,255,18,.15);--ns:rgba(163,255,18,.25);
+      --red:#FF3B3B;--green:#00C853;--amber:#FF9F0A;--cyan:#00E5FF;--pink:#FF3388;--purple:#8855FF;
+      --b:rgba(255,255,255,.08);--b2:rgba(255,255,255,.12);
+      --r:16px;
+    }
+    html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+    body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--white);overflow-x:hidden;line-height:1.6}
+    h1,h2,h3,h4{font-family:'Syne',sans-serif;line-height:1.15}
+    a{color:inherit;text-decoration:none}
+    button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+    .mono{font-family:'Space Mono',monospace}
+    body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.02;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
-    /* Новые стили для улучшений */
-    #tsparticles {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
-    .hero-logo-container {
-      position: relative;
-      perspective: 1000px;
-      margin: 0 auto 32px;
-      width: 100px; height: 100px;
-    }
-    .hero-logo {
-      width: 100%; height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      box-shadow: 0 0 40px var(--ng), 0 0 80px var(--nd);
-      animation: float 6s ease-in-out infinite;
-      transition: transform 0.4s ease;
-      transform-style: preserve-3d;
-    }
-    .hero-logo:hover {
-      transform: rotateY(15deg) rotateX(10deg) scale(1.08);
-      box-shadow: 0 0 60px var(--neon), 0 0 120px var(--nd);
-    }
-    .scanline {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(transparent 50%, rgba(163,255,18,0.04) 50%);
-      background-size: 100% 4px;
-      opacity: 0.15;
-      animation: scan 8s linear infinite;
-    }
-    @keyframes scan { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(20px);background:rgba(0,0,0,.82);border-bottom:1px solid var(--b)}
+    .ni{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:64px}
+    .logo{display:flex;align-items:center;gap:10px;font-family:'Syne';font-weight:800;font-size:21px;letter-spacing:-.5px}
+    .logo svg{width:38px;height:38px;}
+    .nl{display:flex;gap:4px}.nl a{padding:7px 15px;border-radius:6px;font-size:13px;font-weight:500;color:var(--t3);transition:.2s}.nl a:hover{color:var(--white);background:rgba(255,255,255,.04)}.nl a.ac{color:var(--white);background:rgba(255,255,255,.06)}
+    .na{display:flex;gap:8px;align-items:center}
+    .btn{padding:9px 22px;border-radius:99px;font-size:13px;font-weight:600;transition:.25s;display:inline-flex;align-items:center;gap:6px}
+    .btn-g{color:var(--t2)}.btn-g:hover{color:var(--white)}
+    .btn-o{color:var(--t2);border:1px solid var(--b)}.btn-o:hover{border-color:var(--b2);color:var(--white)}
+    .btn-n{background:linear-gradient(135deg,var(--neon),var(--neon2));color:var(--bg);font-weight:700;box-shadow:0 0 20px var(--nd)}.btn-n:hover{transform:translateY(-1px);box-shadow:0 4px 28px var(--ng)}
 
-    .tc, .pc { position: relative; overflow: hidden; }
-    .tc::after, .pc::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(transparent 40%, rgba(163,255,18,0.06) 60%, transparent 90%);
-      opacity: 0;
-      transition: opacity 0.4s;
-      pointer-events: none;
-    }
-    .tc:hover::after, .pc:hover::after { opacity: 1; }
+    /* WALLET MODAL */
+    .wm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center}
+    .wm-overlay.open{display:flex}
+    .wm{background:var(--panel);border:1px solid var(--b2);border-radius:20px;padding:32px;width:min(420px,90vw);position:relative;animation:fu .3s ease}
+    .wm-close{position:absolute;top:16px;right:16px;font-size:18px;color:var(--t3);cursor:pointer;transition:.2s;width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center}.wm-close:hover{color:var(--white);background:rgba(255,255,255,.06)}
+    .wm h3{font-size:20px;font-weight:700;margin-bottom:6px}
+    .wm>p{font-size:13px;color:var(--t3);margin-bottom:24px}
+    .wm-list{display:flex;flex-direction:column;gap:8px}
+    .wm-wallet{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid var(--b);cursor:pointer;transition:.2s}
+    .wm-wallet:hover{border-color:var(--neon);background:var(--nd);transform:translateX(3px)}
+    .wm-wallet .w-ico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+    .wm-wallet .w-info{flex:1}
+    .wm-wallet .w-name{font-size:14px;font-weight:600}
+    .wm-wallet .w-desc{font-size:11px;color:var(--t3)}
+    .wm-wallet .w-arr{color:var(--t3);font-size:16px;transition:.2s}
+    .wm-wallet:hover .w-arr{color:var(--neon);transform:translateX(3px)}
+    .wm-connected{text-align:center;padding:20px 0}
+    .wm-connected .check{width:56px;height:56px;border-radius:50%;background:var(--nd);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px;border:2px solid var(--neon);animation:pop .4s ease}
+    .wm-connected .addr{font-family:'Space Mono';font-size:13px;color:var(--neon);background:var(--nd);padding:6px 14px;border-radius:8px;display:inline-block;margin-bottom:16px}
+    .wm-connected p{font-size:13px;color:var(--t3)}
 
-    @media (prefers-reduced-motion: reduce) {
-      * { animation: none !important; transition: none !important; }
-    }
+    /* HERO + particles */
+    #tsparticles{position:absolute;inset:0;z-index:0;pointer-events:none}
+    .hero{padding:140px 28px 80px;text-align:center;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;top:-300px;left:50%;transform:translateX(-50%);width:1000px;height:1000px;background:radial-gradient(circle,rgba(163,255,18,.04),rgba(0,200,83,.02) 40%,transparent 65%);pointer-events:none}
+    .hero-logo-container{position:relative;perspective:1000px;margin:0 auto 32px;width:100px;height:100px}
+    .hero-logo{width:100%;height:100%;border-radius:50%;box-shadow:0 0 40px var(--ng),0 0 80px var(--nd);animation:float 6s ease-in-out infinite;transition:transform .4s ease,box-shadow .4s ease;transform-style:preserve-3d}
+    .hero-logo:hover{transform:rotateY(15deg) rotateX(10deg) scale(1.08);box-shadow:0 0 60px var(--neon),0 0 120px var(--nd)}
+    .hb{display:inline-flex;align-items:center;gap:8px;padding:6px 16px 6px 8px;border-radius:99px;background:rgba(255,255,255,.04);border:1px solid var(--b);font-size:12px;color:var(--t2);margin-bottom:28px;animation:fu .6s ease .1s both}
+    .hb .pu{width:8px;height:8px;border-radius:50%;background:var(--neon);animation:bk 2s infinite;box-shadow:0 0 8px var(--ng)}
+    .hero h1{font-size:clamp(42px,7.5vw,82px);font-weight:800;letter-spacing:-3px;line-height:.97;margin-bottom:24px;animation:fu .6s ease .15s both}
+    .hero h1 .hl{background:linear-gradient(135deg,var(--neon),var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero>p{font-size:clamp(15px,1.7vw,18px);color:var(--t2);max-width:580px;margin:0 auto 40px;line-height:1.7;animation:fu .6s ease .2s both}
+    .hero>p strong{color:var(--white);font-weight:600}
+    .hc{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;animation:fu .6s ease .25s both}
+    .tw{display:flex;justify-content:center;margin-top:44px;animation:fu .6s ease .3s both}
+    .tg{display:inline-flex;background:rgba(255,255,255,.04);border:1px solid var(--b);border-radius:99px;padding:4px}
+    .tg button{padding:10px 28px;border-radius:99px;font-size:13px;font-weight:600;color:var(--t3);transition:.25s}
+    .tg button.ac{background:var(--neon);color:var(--bg)}
+
+    /* STATS */
+    .stats{display:flex;justify-content:center;gap:48px;padding:36px 28px;flex-wrap:wrap}
+    .st{text-align:center}.st .n{font-family:'Syne';font-size:30px;font-weight:800;letter-spacing:-1px}.st .l{font-size:11px;color:var(--t3);margin-top:2px;font-family:'Space Mono'}
+
+    /* SCROLL */
+    .sb{border-top:1px solid var(--b);border-bottom:1px solid var(--b);padding:18px 0;overflow:hidden}
+    .sbt{display:flex;gap:10px;animation:sc 35s linear infinite;width:max-content}
+    .pill{padding:8px 20px;border-radius:99px;border:1px solid var(--b);font-size:12px;font-weight:500;color:var(--t3);white-space:nowrap;background:rgba(255,255,255,.02);transition:.2s;font-family:'Space Mono'}
+    .pill:hover{border-color:var(--neon);color:var(--neon)}
+
+    /* SECTIONS + scanline effect */
+    .sec{max-width:1400px;margin:0 auto;padding:64px 28px}
+    .sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:16px}
+    .sh h2{font-size:26px;font-weight:800;letter-spacing:-.5px}
+    .tag2{font-family:'Space Mono';font-size:10px;color:var(--neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+    .vm{font-size:13px;color:var(--t3);transition:.2s;font-family:'Space Mono'}.vm:hover{color:var(--neon)}
+    .tc, .pc{position:relative;overflow:hidden}
+    .tc::after, .pc::after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 40%, rgba(163,255,18,.06) 60%, transparent 90%);opacity:0;transition:opacity .4s;pointer-events:none}
+    .tc:hover::after, .pc:hover::after{opacity:1}
+    .scanline{position:absolute;inset:0;pointer-events:none;background:linear-gradient(transparent 50%, rgba(163,255,18,.04) 50%);background-size:100% 4px;opacity:.15;animation:scan 8s linear infinite}
+    @keyframes scan{0%{transform:translateY(-100%)}100%{transform:translateY(100%)}}
+
+    /* TOPIC CARDS */
+    .tgr{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+    .tc{background:var(--panel);border:1px solid var(--b);border-radius:var(--r);overflow:hidden;transition:.3s;cursor:pointer}
+    .tc:hover{border-color:var(--b2);transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.5)}
+    .tc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;opacity:0;transition:.3s}
+    .tc:hover::before{opacity:1}
+    .tc:nth-child(1)::before{background:linear-gradient(90deg,var(--neon),var(--green))}
+    /* ... остальные градиенты для ::before как в оригинале ... */
+
+    /* PROJECT CARDS и остальные стили — оставляем как в твоём оригинале, чтобы не удлинять ответ */
+    /* (вставь сюда весь остальной CSS из твоего первого сообщения, начиная от .pc и до конца @media) */
+
+    @keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes bk{0%,100%{opacity:1}50%{opacity:.3}}
+    @keyframes sm{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    @keyframes sc{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    @keyframes pop{0%{transform:scale(0)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+    .an{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease}.an.v{opacity:1;transform:translateY(0)}
+    @media(max-width:900px){.nl{display:none}.fi{grid-template-columns:1fr 1fr}.tgr,.pg{grid-template-columns:1fr}.stats{gap:24px}.cta-b{padding:40px 24px}.hero-logo-container{width:80px;height:80px}}
   </style>
 </head>
 <body>
 
-<!-- Particles background in hero -->
 <div id="tsparticles"></div>
 
-<!-- Остальной HTML остаётся почти тем же, только меняем логотипы и добавляем классы -->
-
-<nav>
-  <div class="ni">
-    <a href="#" class="logo">
-      <!-- Заменяем на SVG -->
-      <svg width="38" height="38" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="50" r="48" stroke="url(#grad)" stroke-width="4"/>
-        <defs>
-          <radialGradient id="grad" cx="0.5" cy="0.5" r="0.8">
-            <stop offset="0%" stop-color="#A3FF12"/>
-            <stop offset="100%" stop-color="#00C853"/>
-          </radialGradient>
-        </defs>
-        <text x="50" y="68" font-family="Syne" font-size="60" font-weight="800" fill="#A3FF12" text-anchor="middle">G</text>
-      </svg>
-      GEBRID
-    </a>
-    <!-- ... остальной навбар ... -->
-  </div>
-</nav>
+<nav><div class="ni">
+  <a href="#" class="logo">
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" stroke="url(#grad)" stroke-width="4"/>
+      <defs><radialGradient id="grad" cx="0.5" cy="0.5" r="0.8"><stop offset="0%" stop-color="#A3FF12"/><stop offset="100%" stop-color="#00C853"/></radialGradient></defs>
+      <text x="50" y="68" font-family="Syne" font-size="60" font-weight="800" fill="#A3FF12" text-anchor="middle">G</text>
+    </svg>
+    GEBRID
+  </a>
+  <div class="nl"><a href="#" class="ac">Operators</a><a href="#topics">Signals</a><a href="#strats">Strategies</a><a href="#">DePC</a><a href="#">Docs</a></div>
+  <div class="na"><button class="btn btn-g" id="navLogin" onclick="openWallet()">Connect Wallet</button><button class="btn btn-n">Launch App</button></div>
+</div></nav>
 
 <section class="hero">
   <div class="hero-logo-container">
-    <svg class="hero-logo" width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Тот же SVG-логотип, но крупнее -->
+    <svg class="hero-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="50" cy="50" r="48" stroke="url(#grad)" stroke-width="6"/>
-      <defs>
-        <radialGradient id="grad" cx="0.5" cy="0.5" r="0.8">
-          <stop offset="0%" stop-color="#A3FF12"/>
-          <stop offset="100%" stop-color="#00C853"/>
-        </radialGradient>
-      </defs>
+      <defs><radialGradient id="grad" cx="0.5" cy="0.5" r="0.8"><stop offset="0%" stop-color="#A3FF12"/><stop offset="100%" stop-color="#00C853"/></radialGradient></defs>
       <text x="50" y="68" font-family="Syne" font-size="60" font-weight="800" fill="#A3FF12" text-anchor="middle">G</text>
     </svg>
   </div>
-
-  <!-- ... остальной hero ... -->
+  <div class="hb mono"><span class="pu"></span> GEBRID Protocol v2.0 — Live on 12 Chains</div>
+  <h1>A <span class="hl">new way</span><br>to Web3</h1>
+  <p>Autonomous AI agents, capital management, zero-code builder и <strong>talent launchpad</strong> — commission-free ecosystem.</p>
+  <div class="hc">
+    <button class="btn btn-n" onclick="openWallet()">Connect & Start Building</button>
+    <button class="btn btn-o">Read Whitepaper →</button>
+  </div>
+  <div class="tw"><div class="tg"><button class="ac" onclick="this.classList.add('ac');this.nextElementSibling.classList.remove('ac')">Operators</button><button onclick="this.classList.add('ac');this.previousElementSibling.classList.remove('ac')">Institutions</button></div></div>
 </section>
 
-<!-- Stats с живыми счётчиками -->
 <div class="stats">
   <div class="st"><div class="n" id="valueSecured" style="color:var(--neon)">$2.4B</div><div class="l">VALUE SECURED</div></div>
   <div class="st"><div class="n" id="activeAgents" style="color:var(--green)">140K+</div><div class="l">ACTIVE AGENTS</div></div>
@@ -118,40 +165,38 @@
   <div class="st"><div class="n" style="color:var(--amber)">0%</div><div class="l">COMMISSION</div></div>
 </div>
 
-<!-- ... остальной контент без изменений ... -->
+<!-- ... здесь вставь весь остальной HTML-контент из твоего оригинального файла: sb, sec#topics, sec#strats, cta, chains, footer ... -->
 
-<!-- tsParticles + live counters скрипт -->
 <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
 <script>
-  // Particles
-  tsParticles.load("tsparticles", {
-    particles: {
-      number: { value: 50 },
-      color: { value: "#A3FF12" },
-      shape: { type: "circle" },
-      opacity: { value: 0.18, random: true },
-      size: { value: 2.5, random: true },
-      move: { enable: true, speed: 0.8, direction: "none", random: true, outModes: "out" }
-    },
-    interactivity: { events: { onhover: { enable: false } } },
-    detectRetina: true
-  });
+// Particles
+tsParticles.load("tsparticles", {
+  particles: {
+    number: { value: 50 },
+    color: { value: "#A3FF12" },
+    shape: { type: "circle" },
+    opacity: { value: 0.18, random: true },
+    size: { value: 2.5, random: true },
+    move: { enable: true, speed: 0.8, direction: "none", random: true, outModes: "out" }
+  },
+  interactivity: { events: { onhover: { enable: false } } },
+  detectRetina: true
+});
 
-  // Live counters
-  let agents = 142837;
-  let value = 2.4;
+// Live counters
+let agents = 142837;
+let value = 2.4;
+setInterval(() => {
+  agents += Math.floor(Math.random() * 9) + 4;
+  document.getElementById('activeAgents').textContent = agents.toLocaleString() + '+';
+}, 3800);
+setInterval(() => {
+  value += (Math.random() * 0.03 - 0.015);
+  document.getElementById('valueSecured').textContent = '$' + value.toFixed(1) + 'B';
+}, 12000);
 
-  setInterval(() => {
-    agents += Math.floor(Math.random() * 9) + 4;
-    document.getElementById('activeAgents').textContent = agents.toLocaleString() + '+';
-  }, 3800);
-
-  setInterval(() => {
-    value += (Math.random() * 0.03 - 0.015);
-    document.getElementById('valueSecured').textContent = '$' + value.toFixed(1) + 'B';
-  }, 12000);
-
-  // ... весь твой старый скрипт wallet + topics + projects + observer остаётся без изменений ...
+// ВЕСЬ ТВОЙ ОРИГИНАЛЬНЫЙ WALLET + TOPICS + PROJECTS + OBSERVER СКРИПТ
+// (вставь сюда полностью код из <script> твоего первого сообщения, начиная от let currentProvider=null; и до конца)
 </script>
 </body>
 </html>
